@@ -1,0 +1,160 @@
+.page-location {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    justify-content: flex-start;
+}
+
+.location-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 30px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.location-icon-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.animate-content .location-icon-wrapper {
+    animation: dropPin 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, floatLoc 4s ease-in-out infinite alternate 0.8s;
+}
+
+.loc-pin {
+    width: 60px;
+    height: 60px;
+    z-index: 2;
+    filter: drop-shadow(0 10px 15px rgba(0, 122, 255, 0.3));
+}
+
+.loc-pin svg {
+    width: 100%;
+    height: 100%;
+}
+
+.loc-ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 122, 255, 0.2);
+    border: 2px solid rgba(0, 122, 255, 0.4);
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.animate-content .loc-ripple-1 {
+    animation: radarRipple 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite 0.6s;
+}
+
+.animate-content .loc-ripple-2 {
+    animation: radarRipple 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite 1.8s;
+}
+
+@keyframes dropPin {
+    0% { opacity: 0; transform: translateY(-50px) scale(0.8); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes floatLoc {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+@keyframes radarRipple {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(6); border-width: 0px; }
+}
+
+.loc-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 15px 0;
+    opacity: 0;
+}
+
+.animate-content .loc-title {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.2s forwards;
+}
+
+.loc-desc {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    color: #3a3a3c;
+    line-height: 1.5;
+    margin: 0 0 40px 0;
+    opacity: 0;
+}
+
+.animate-content .loc-desc {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.3s forwards;
+}
+
+.loc-btn-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    opacity: 0;
+}
+
+.animate-content .loc-btn-wrapper {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.4s forwards;
+}
+
+.btn-loc-primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background: #007aff;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3);
+}
+
+.btn-loc-primary:active {
+    transform: scale(0.96);
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+}
+
+.btn-loc-secondary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background: transparent;
+    color: #007aff;
+    font-size: 17px;
+    font-weight: 500;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+}
+
+.btn-loc-secondary:active {
+    transform: scale(0.96);
+    background: rgba(0, 122, 255, 0.1);
+}

@@ -1,0 +1,105 @@
+.boot-logo-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid transparent;
+    z-index: 2;
+    transition: 
+        top 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+        width 1s cubic-bezier(0.4, 0, 0.2, 1), 
+        height 1s ease, 
+        border-radius 1s ease, 
+        box-shadow 1s ease, 
+        background 1s ease,
+        backdrop-filter 1s ease;
+}
+
+.boot-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.boot-logo-container::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    filter: blur(1px);
+    transform: rotate(-20deg);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.boot-logo-container.glassy {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 
+        inset 3px 3px 8px rgba(255, 255, 255, 0.9), 
+        inset -3px -3px 8px rgba(0, 0, 0, 0.3),
+        0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+}
+
+.boot-logo-container.glassy .boot-logo {
+    transform: scale(0) rotate(90deg);
+    opacity: 0;
+}
+
+.boot-logo-container.glassy::after {
+    opacity: 1;
+}
+
+.boot-logo-container.falling {
+    top: calc(100% - 15px);
+    width: 26px;
+    height: 38px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.boot-logo-container.bar-formed {
+    width: 130px;
+    height: 4px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 1), 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 1px solid transparent;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+
+.boot-logo-container.bar-formed::after {
+    opacity: 0;
+}
+
+.home-bar {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 4px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 1), 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.home-bar.expanded {
+    width: 130px;
+}

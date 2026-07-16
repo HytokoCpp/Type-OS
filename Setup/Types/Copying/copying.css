@@ -1,0 +1,204 @@
+.page-copying {
+    background: #f2f2f7;
+    padding-top: 0;
+    justify-content: flex-start;
+}
+
+.copying-top-bar {
+    width: 100%;
+    padding: 60px 20px 20px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.nav-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.nav-icon-btn:active {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(0.9);
+}
+
+.nav-icon-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.copying-graphic-area {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.mock-phone {
+    position: absolute;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease;
+}
+
+.back-phone {
+    width: 140px;
+    height: 280px;
+    background-image: url('../../../../Phone/assets/wallpapers/classic1.png');
+    background-size: cover;
+    background-position: center;
+    transform: translate(-30px, 20px) scale(0.85) rotate(-5deg);
+    opacity: 0;
+}
+
+.front-phone {
+    width: 150px;
+    height: 300px;
+    background-image: url('../../../../Phone/assets/wallpapers/classic1.png');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transform: translate(30px, 40px) scale(0.9) rotate(2deg);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 50px;
+    opacity: 0;
+}
+
+.animate-graphic .back-phone {
+    opacity: 1;
+    transform: translate(-40px, -10px) scale(0.9) rotate(-3deg);
+}
+
+.animate-graphic .front-phone {
+    opacity: 1;
+    transform: translate(30px, 20px) scale(1) rotate(0deg);
+}
+
+.mock-apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mock-app {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    opacity: 0.9;
+}
+
+.copying-bottom-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 30px 30px 0 0;
+    padding: 35px 25px 40px 25px;
+    box-sizing: border-box;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
+    transform: translateY(100%);
+    transition: transform 0.8s cubic-bezier(0.32, 0.72, 0, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.animate-sheet {
+    transform: translateY(0);
+}
+
+.copying-bottom-sheet h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 15px 0;
+}
+
+.copying-bottom-sheet p {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #6e6e73;
+    line-height: 1.4;
+    margin: 0 0 30px 0;
+}
+
+.search-area {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.search-area span {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #86868b;
+}
+
+.apple-spinner {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.spinner-blade {
+    position: absolute;
+    left: 45%;
+    top: 0;
+    width: 10%;
+    height: 25%;
+    background-color: #86868b;
+    border-radius: 50px;
+    transform-origin: 50% 200%;
+    animation: spinnerFade 0.8s linear infinite;
+}
+
+.spinner-blade:nth-child(1) { transform: rotate(0deg); animation-delay: 0s; }
+.spinner-blade:nth-child(2) { transform: rotate(45deg); animation-delay: -0.7s; }
+.spinner-blade:nth-child(3) { transform: rotate(90deg); animation-delay: -0.6s; }
+.spinner-blade:nth-child(4) { transform: rotate(135deg); animation-delay: -0.5s; }
+.spinner-blade:nth-child(5) { transform: rotate(180deg); animation-delay: -0.4s; }
+.spinner-blade:nth-child(6) { transform: rotate(225deg); animation-delay: -0.3s; }
+.spinner-blade:nth-child(7) { transform: rotate(270deg); animation-delay: -0.2s; }
+.spinner-blade:nth-child(8) { transform: rotate(315deg); animation-delay: -0.1s; }
+
+@keyframes spinnerFade {
+    0% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+.btn-skip-setup {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background: #f2f2f7;
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+}
+
+.btn-skip-setup:active {
+    background: #e5e5ea;
+}

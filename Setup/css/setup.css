@@ -1,0 +1,243 @@
+.system-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../Phone/assets/wallpapers/classic1.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.1);
+    filter: blur(20px);
+    z-index: 0;
+    transition: 
+        opacity 3s cubic-bezier(0.4, 0, 0.2, 1), 
+        transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        filter 3s ease-out;
+}
+
+.system-wallpaper.visible {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+    animation: slowWave 8s ease-in-out infinite alternate;
+}
+
+@keyframes slowWave {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.05); filter: brightness(1.05); }
+}
+
+.setup-lottie-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 10;
+}
+
+.setup-lottie-container.visible {
+    opacity: 1;
+}
+
+.swipe-hint {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    opacity: 0;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    transition: opacity 1s ease;
+}
+
+.swipe-hint.visible {
+    animation: pulseHint 2.5s infinite ease-in-out;
+}
+
+.swipe-hint .arrow {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 16px;
+    animation: bounceArrow 2s infinite ease-in-out;
+}
+
+@keyframes pulseHint {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+@keyframes bounceArrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.home-bar.bouncing {
+    animation: bounceBar 2s infinite ease-in-out;
+}
+
+@keyframes bounceBar {
+    0%, 100% { transform: translateX(-50%) translateY(0) scaleX(1); }
+    50% { transform: translateX(-50%) translateY(-5px) scaleX(0.95); }
+}
+
+/* Навигационный контроллер */
+.setup-nav-controller {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    z-index: 20;
+    transform: translateY(100%);
+    overflow: hidden;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.setup-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.page-active { transform: translateX(0); }
+.page-enter-right { transform: translateX(100%); }
+.page-exit-left { transform: translateX(-100%); }
+
+/* Элементы внутри страниц (анимируются только когда активен класс animate-content) */
+.globe-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 25px;
+    opacity: 0;
+}
+
+.animate-content .globe-wrapper {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) forwards, floatGlobe 4s ease-in-out infinite alternate 1s;
+}
+
+.globe-svg {
+    width: 100%;
+    height: 100%;
+    stroke-dasharray: 150;
+    stroke-dashoffset: 150;
+    transform: rotate(-15deg);
+}
+
+.animate-content .globe-svg {
+    animation: drawGlobe 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes drawGlobe { to { stroke-dashoffset: 0; } }
+@keyframes floatGlobe { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+
+.locale-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 25px;
+    opacity: 0;
+}
+
+.animate-content .locale-title {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.1s forwards;
+}
+
+.locale-list-wrapper {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 40px 20px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+.locale-list-wrapper::-webkit-scrollbar { display: none; }
+
+.locale-group-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+    margin-bottom: 6px;
+    margin-left: 12px;
+    opacity: 0;
+}
+
+.animate-content .locale-group-title {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.locale-group {
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    opacity: 0;
+}
+
+.animate-content .locale-group {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.locale-item {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.locale-item.fade-in-cascade {
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.animate-content .locale-item.fade-in-cascade {
+    animation: fadeUpItem 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.locale-item:last-child { border-bottom: none; }
+.locale-item:active { background: rgba(0, 0, 0, 0.08); transform: scale(0.97); }
+
+.chevron {
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 20px;
+    font-weight: 400;
+}
+
+@keyframes fadeUpItem {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
