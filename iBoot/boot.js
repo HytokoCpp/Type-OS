@@ -10,7 +10,7 @@ async function verifySystem() {
         }
     });
 
-    if (document.body.children.length > 40) {
+    if (document.body.children.length > 45) {
         isValid = false;
     }
 

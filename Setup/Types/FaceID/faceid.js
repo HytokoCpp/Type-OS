@@ -113,7 +113,9 @@ window.renderFaceIDScreen = function() {
         stopCamera();
         faceIdPage.classList.remove('page-active');
         faceIdPage.classList.add('page-exit-left');
-        console.log("[Setup] Proceed to next screen after Face ID");
+        if (typeof window.renderPasscodeScreen === 'function') {
+            window.renderPasscodeScreen();
+        }
     };
 
     setupLaterBtn.addEventListener('click', () => {
@@ -161,8 +163,15 @@ window.renderFaceIDScreen = function() {
                         video.srcObject = stream;
                     })
                     .catch(err => {
-                        video.style.background = '#1a1a1a';
+                        video.style.display = 'none';
+                        viewfinder.style.backgroundImage = "url('assets/wallpapers/classic1.png')";
+                        viewfinder.style.backgroundSize = "cover";
+                        viewfinder.style.backgroundPosition = "center";
+                        viewfinder.style.opacity = "0.85";
                     });
+
+                title.innerText = '';
+                desc.innerText = '';
 
                 bottomSheet.innerHTML = '';
                 
@@ -187,6 +196,62 @@ window.renderFaceIDScreen = function() {
                     bottomSheet.classList.remove('fade-out-down');
                     bottomSheet.classList.add('fade-in-up');
                 }, 300);
+
+                setTimeout(() => {
+                    stopCamera();
+                    scanTextWrapper.classList.remove('visible');
+                    bottomSheet.classList.remove('fade-in-up');
+                    bottomSheet.classList.add('fade-out-down');
+
+                    setTimeout(() => {
+                        iconWrapper.style.display = 'none';
+                        
+                        contentArea.classList.remove('fade-out-down');
+                        contentArea.classList.add('fade-in-up');
+
+                        const successIcon = document.createElement('div');
+                        successIcon.className = 'faceid-success-icon';
+                        successIcon.innerHTML = `
+                            <svg viewBox="0 0 52 52">
+                                <circle class="success-circle" cx="26" cy="26" r="24" fill="none"/>
+                                <path class="success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        `;
+                        contentArea.insertBefore(successIcon, title);
+
+                        setTimeout(() => {
+                            successIcon.classList.add('visible');
+                        }, 50);
+
+                        setTimeout(() => {
+                            title.innerText = 'Face ID настроен';
+                            title.style.textAlign = 'center';
+                            title.style.marginTop = '20px';
+                            desc.innerText = 'Теперь Вы можете использовать Face ID для разблокировки телефона.';
+                            desc.style.textAlign = 'center';
+
+                            title.style.opacity = '1';
+                            desc.style.opacity = '1';
+
+                            bottomSheet.innerHTML = '';
+                            
+                            const finalBtn = document.createElement('button');
+                            finalBtn.className = 'btn-privacy-primary';
+                            finalBtn.innerText = 'Продолжить';
+                            finalBtn.addEventListener('click', () => {
+                                finalBtn.style.transform = 'scale(0.96)';
+                                setTimeout(() => finalBtn.style.transform = 'scale(1)', 150);
+                                setTimeout(proceedNext, 300);
+                            });
+
+                            bottomSheet.appendChild(finalBtn);
+                            bottomSheet.classList.remove('fade-out-down');
+                            bottomSheet.classList.add('fade-in-up');
+                        }, 800);
+
+                    }, 800);
+
+                }, 5000);
 
             }, 400);
         }, 150);
