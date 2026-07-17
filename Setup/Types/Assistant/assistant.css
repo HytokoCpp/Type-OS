@@ -292,3 +292,13 @@ input:checked + .ios-slider:before {
         transform: translateY(0) scale(1);
     }
 }
+
+.voice-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.check-icon {
+    transition: opacity 0.2s ease;
+}

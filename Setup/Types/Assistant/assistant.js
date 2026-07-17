@@ -208,13 +208,13 @@ function renderAssistantVoiceScreen(prevPage) {
         
         setTimeout(() => {
             instructions.classList.remove('success-text');
-            instructions.innerText = 'Голос успешно настроен!';
+            instructions.innerText = 'Обучение завершено!';
             instructions.style.opacity = '1';
             
             setTimeout(() => {
                 voicePage.classList.remove('page-active');
                 voicePage.classList.add('page-exit-left');
-                renderAssistantSettingsScreen();
+                renderAssistantVoiceSelectScreen(); // ИДЕМ НА ВЫБОР ГОЛОСА
                 setTimeout(() => voicePage.remove(), 600);
             }, 1500);
             
@@ -267,10 +267,8 @@ function renderAssistantVoiceScreen(prevPage) {
 
         recognition.onerror = (event) => {
             if (event.error === 'not-allowed') {
-                transcriptText.innerText = 'Нет доступа к микрофону!';
+                transcriptText.innerText = 'Нет доступа к микрофону';
                 transcriptText.style.color = '#ff3b30';
-            } else if (event.error !== 'no-speech') {
-                transcriptText.innerText = 'Ошибка: ' + event.error;
             }
         };
 
@@ -280,16 +278,14 @@ function renderAssistantVoiceScreen(prevPage) {
             }
         };
 
-        try {
-            recognition.start();
-        } catch (e) {}
+        try { recognition.start(); } catch (e) {}
     } else {
-        transcriptText.innerText = 'Ваш браузер не поддерживает микрофон';
+        transcriptText.innerText = 'Микрофон не поддерживается';
         transcriptText.style.color = '#ff3b30';
         setTimeout(() => {
             instructions.classList.add('success-text');
             setTimeout(() => completeSetup(), 1500);
-        }, 3000);
+        }, 2000);
     }
 
     skipBtn.addEventListener('click', () => {
@@ -300,8 +296,123 @@ function renderAssistantVoiceScreen(prevPage) {
         setTimeout(() => {
             voicePage.classList.remove('page-active');
             voicePage.classList.add('page-exit-left');
-            renderAssistantSettingsScreen();
+            renderAssistantVoiceSelectScreen(); // ИДЕМ НА ВЫБОР ГОЛОСА
             setTimeout(() => voicePage.remove(), 600);
+        }, 300);
+    });
+}
+
+function renderAssistantVoiceSelectScreen() {
+    const navController = document.querySelector('.setup-nav-controller');
+    
+    const voiceSelPage = document.createElement('div');
+    voiceSelPage.className = 'setup-page page-enter-right page-assistant-voice-sel';
+    
+    const topBar = document.createElement('div');
+    topBar.className = 'copying-top-bar';
+    const backBtn = document.createElement('div');
+    backBtn.className = 'nav-icon-btn';
+    backBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`;
+    topBar.appendChild(backBtn);
+
+    const title = document.createElement('h2');
+    title.className = 'passcode-title';
+    title.innerText = 'Голос Коляна';
+
+    const desc = document.createElement('p');
+    desc.className = 'passcode-desc';
+    desc.innerText = 'Выберите голос для вашего ассистента.';
+
+    const listWrapper = document.createElement('div');
+    listWrapper.className = 'locale-list-wrapper';
+
+    const groupWrapper = document.createElement('div');
+    groupWrapper.className = 'locale-group';
+    groupWrapper.style.animationDelay = '0.1s';
+    listWrapper.appendChild(groupWrapper);
+
+    const bottomSheet = document.createElement('div');
+    bottomSheet.className = 'privacy-bottom-sheet';
+    const finishBtn = document.createElement('button');
+    finishBtn.className = 'btn-privacy-primary';
+    finishBtn.innerText = 'Продолжить';
+    bottomSheet.appendChild(finishBtn);
+
+    voiceSelPage.appendChild(topBar);
+    voiceSelPage.appendChild(title);
+    voiceSelPage.appendChild(desc);
+    voiceSelPage.appendChild(listWrapper);
+    voiceSelPage.appendChild(bottomSheet);
+    
+    navController.appendChild(voiceSelPage);
+
+    void voiceSelPage.offsetWidth;
+    voiceSelPage.classList.remove('page-enter-right');
+    voiceSelPage.classList.add('page-active');
+    
+    setTimeout(() => { voiceSelPage.classList.add('animate-content'); }, 100);
+
+    const populateVoices = () => {
+        let voices = window.speechSynthesis.getVoices();
+        // Пытаемся найти русские голоса
+        let ruVoices = voices.filter(v => v.lang.includes('ru') || v.lang.includes('RU'));
+        
+        groupWrapper.innerHTML = '';
+
+        if (ruVoices.length === 0) {
+            const item = document.createElement('div');
+            item.className = 'locale-item';
+            item.innerHTML = `<span>Системный голос (По умолчанию)</span><svg viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" width="20" height="20"><path d="M20 6L9 17l-5-5"/></svg>`;
+            groupWrapper.appendChild(item);
+        } else {
+            ruVoices.forEach((v, index) => {
+                const item = document.createElement('div');
+                item.className = 'locale-item voice-option';
+                
+                // Выделяем первый по умолчанию
+                const isChecked = index === 0;
+                item.innerHTML = `
+                    <span>Голос ${index + 1} (${v.name.split(' ')[0]})</span>
+                    <svg class="check-icon" style="opacity: ${isChecked ? 1 : 0}" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" width="20" height="20"><path d="M20 6L9 17l-5-5"/></svg>
+                `;
+
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.voice-option .check-icon').forEach(icon => icon.style.opacity = '0');
+                    item.querySelector('.check-icon').style.opacity = '1';
+                    
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance("Привет! Я Колян, ваш виртуальный ассистент.");
+                    utterance.voice = v;
+                    window.speechSynthesis.speak(utterance);
+                });
+
+                groupWrapper.appendChild(item);
+            });
+        }
+    };
+
+    // Загрузка голосов иногда требует времени
+    if (window.speechSynthesis.getVoices().length > 0) {
+        populateVoices();
+    } else {
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    backBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        voiceSelPage.classList.remove('page-active');
+        voiceSelPage.classList.add('page-enter-right');
+        setTimeout(() => voiceSelPage.remove(), 600);
+    });
+
+    finishBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        finishBtn.style.transform = 'scale(0.96)';
+        setTimeout(() => finishBtn.style.transform = 'scale(1)', 150);
+        setTimeout(() => {
+            voiceSelPage.classList.remove('page-active');
+            voiceSelPage.classList.add('page-exit-left');
+            renderAssistantSettingsScreen();
         }, 300);
     });
 }
@@ -348,18 +459,6 @@ function renderAssistantSettingsScreen() {
                 </label>
             </div>
         </div>
-        <div class="locale-group">
-            <div class="locale-item toggle-item">
-                <div style="display:flex; flex-direction:column; align-items:flex-start; gap:4px;">
-                    <span>Отправка данных</span>
-                    <span style="font-size:12px; color:#86868b;">Помочь улучшить ИИ</span>
-                </div>
-                <label class="ios-switch">
-                    <input type="checkbox">
-                    <span class="ios-slider"></span>
-                </label>
-            </div>
-        </div>
     `;
     listWrapper.innerHTML = html;
 
@@ -391,11 +490,6 @@ function renderAssistantSettingsScreen() {
     backBtn.addEventListener('click', () => {
         setPage.classList.remove('page-active');
         setPage.classList.add('page-enter-right');
-        const introPage = document.querySelector('.page-assistant');
-        if (introPage) {
-            introPage.classList.remove('page-exit-left');
-            introPage.classList.add('page-active');
-        }
         setTimeout(() => setPage.remove(), 600);
     });
 
@@ -430,22 +524,13 @@ function renderAssistantDownloadScreen() {
     title.className = 'assistant-title dl-title';
     title.innerText = 'Загрузка ИИ-модели';
 
-    const tooltips = [
-        'Инициализация WebLLM...',
-        'Загрузка Qwen 2.5 1.5B (INT4)...',
-        'Компиляция WebGPU шейдеров...',
-        'Оптимизация параметров кэша...',
-        'Создание нейронных связей...',
-        'Почти готово...'
-    ];
-
     const tooltipText = document.createElement('p');
     tooltipText.className = 'assistant-desc dl-tooltip';
-    tooltipText.innerText = tooltips[0];
+    tooltipText.innerText = 'Инициализация WebGPU...';
 
     const timeRemaining = document.createElement('p');
     timeRemaining.className = 'dl-time';
-    timeRemaining.innerText = 'Осталось около 1 мин...';
+    timeRemaining.innerText = 'Подготовка среды';
 
     contentArea.appendChild(orbWrapper);
     contentArea.appendChild(title);
@@ -461,35 +546,37 @@ function renderAssistantDownloadScreen() {
 
     setTimeout(() => {
         dlPage.classList.add('animate-content');
-    }, 100);
-
-    let tipIndex = 1;
-    const tipInterval = setInterval(() => {
-        if (tipIndex < tooltips.length) {
-            tooltipText.style.opacity = '0';
-            setTimeout(() => {
-                tooltipText.innerText = tooltips[tipIndex];
-                tooltipText.style.opacity = '1';
-                tipIndex++;
-            }, 400);
-        }
-    }, 1400);
-
-    setTimeout(() => {
-        clearInterval(tipInterval);
-        tooltipText.style.opacity = '0';
-        timeRemaining.style.opacity = '0';
-        
-        setTimeout(() => {
-            tooltipText.innerText = 'Готово!';
-            tooltipText.classList.add('success-text');
-            tooltipText.style.opacity = '1';
-            
-            setTimeout(() => {
-                dlPage.classList.remove('page-active');
-                dlPage.classList.add('page-exit-left');
-                console.log("[Setup] Assistant downloaded. Moving to next phase.");
-            }, 1500);
-        }, 400);
-    }, 9000);
+        startRealAIDownload(tooltipText, timeRemaining, dlPage);
+    }, 500);
 }
+
+// РЕАЛЬНОЕ СКАЧИВАНИЕ WebLLM (Qwen2.5-1.5B-Instruct)
+async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
+    try {
+        tooltipElement.innerText = 'Загрузка движка WebLLM...';
+        const webllm = await import("https://esm.run/@mlc-ai/web-llm");
+
+        const selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
+        
+        const initProgressCallback = (report) => {
+            console.log(report);
+            tooltipElement.innerText = report.text.split(']')[1] || report.text;
+            
+            // Если есть прогресс в процентах
+            if (report.progress) {
+                const percent = Math.round(report.progress * 100);
+                timeElement.innerText = `Загружено: ${percent}% (около 1 ГБ)`;
+            }
+        };
+
+        tooltipElement.innerText = 'Проверка WebGPU...';
+        
+        // Начинаем загрузку (кэшируется браузером автоматически)
+        window.aiEngine = await webllm.CreateMLCEngine(
+            selectedModel,
+            { initProgressCallback: initProgressCallback }
+        );
+
+        tooltipElement.innerText = 'Нейросеть успешно загружена!';
+        tooltipElement.classList.add('success-text');
+        timeElement.style.opaci
