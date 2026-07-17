@@ -109,6 +109,7 @@
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+    will-change: transform;
 }
 
 .setup-page {
@@ -121,12 +122,33 @@
     flex-direction: column;
     align-items: center;
     padding-top: 80px;
-    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform, opacity;
 }
 
-.page-active { transform: translateX(0); }
-.page-enter-right { transform: translateX(100%); }
-.page-exit-left { transform: translateX(-100%); }
+.page-active {
+    transform: translateX(0) translateZ(0);
+    visibility: visible;
+    opacity: 1;
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease, visibility 0s 0s;
+}
+
+.page-enter-right {
+    transform: translateX(100%) translateZ(0);
+    visibility: hidden;
+    opacity: 0;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease, visibility 0s 0.5s;
+}
+
+.page-exit-left {
+    transform: translateX(-100%) translateZ(0);
+    visibility: hidden;
+    opacity: 0;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s ease, visibility 0s 0.5s;
+}
 
 /* Элементы внутри страниц (анимируются только когда активен класс animate-content) */
 .globe-wrapper {

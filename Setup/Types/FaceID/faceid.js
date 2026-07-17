@@ -81,7 +81,7 @@ window.renderFaceIDScreen = function() {
 
     setTimeout(() => {
         faceIdPage.classList.add('animate-content');
-    }, 100);
+    }, 50);
 
     const stopCamera = () => {
         if (window.faceIdStream) {
@@ -106,7 +106,7 @@ window.renderFaceIDScreen = function() {
             privPage.classList.remove('page-exit-left');
             privPage.classList.add('page-active');
         }
-        setTimeout(() => faceIdPage.remove(), 600);
+        setTimeout(() => faceIdPage.remove(), 500);
     });
 
     const proceedNext = () => {
@@ -121,7 +121,7 @@ window.renderFaceIDScreen = function() {
     setupLaterBtn.addEventListener('click', () => {
         setupLaterBtn.style.transform = 'scale(0.96)';
         setTimeout(() => setupLaterBtn.style.transform = 'scale(1)', 150);
-        setTimeout(proceedNext, 300);
+        setTimeout(proceedNext, 200);
     });
 
     continueBtn.addEventListener('click', () => {
@@ -157,18 +157,20 @@ window.renderFaceIDScreen = function() {
                 viewfinder.appendChild(video);
                 island.appendChild(viewfinder);
 
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        window.faceIdStream = stream;
-                        video.srcObject = stream;
-                    })
-                    .catch(err => {
-                        video.style.display = 'none';
-                        viewfinder.style.backgroundImage = "url('assets/wallpapers/classic1.png')";
-                        viewfinder.style.backgroundSize = "cover";
-                        viewfinder.style.backgroundPosition = "center";
-                        viewfinder.style.opacity = "0.85";
-                    });
+                setTimeout(() => {
+                    viewfinder.classList.add('visible');
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(stream => {
+                            window.faceIdStream = stream;
+                            video.srcObject = stream;
+                        })
+                        .catch(err => {
+                            video.style.display = 'none';
+                            viewfinder.style.backgroundImage = "url('assets/wallpapers/classic1.png')";
+                            viewfinder.style.backgroundSize = "cover";
+                            viewfinder.style.backgroundPosition = "center";
+                        });
+                }, 500);
 
                 title.innerText = '';
                 desc.innerText = '';
@@ -195,17 +197,17 @@ window.renderFaceIDScreen = function() {
                     scanTextWrapper.classList.add('visible');
                     bottomSheet.classList.remove('fade-out-down');
                     bottomSheet.classList.add('fade-in-up');
-                }, 300);
+                }, 400);
 
                 setTimeout(() => {
-                    stopCamera();
                     scanTextWrapper.classList.remove('visible');
                     bottomSheet.classList.remove('fade-in-up');
                     bottomSheet.classList.add('fade-out-down');
 
                     setTimeout(() => {
-                        iconWrapper.style.display = 'none';
+                        stopCamera();
                         
+                        iconWrapper.style.display = 'none';
                         contentArea.classList.remove('fade-out-down');
                         contentArea.classList.add('fade-in-up');
 
@@ -241,19 +243,19 @@ window.renderFaceIDScreen = function() {
                             finalBtn.addEventListener('click', () => {
                                 finalBtn.style.transform = 'scale(0.96)';
                                 setTimeout(() => finalBtn.style.transform = 'scale(1)', 150);
-                                setTimeout(proceedNext, 300);
+                                setTimeout(proceedNext, 200);
                             });
 
                             bottomSheet.appendChild(finalBtn);
                             bottomSheet.classList.remove('fade-out-down');
                             bottomSheet.classList.add('fade-in-up');
-                        }, 800);
+                        }, 600);
 
-                    }, 800);
+                    }, 600);
 
-                }, 5000);
+                }, 4000);
 
-            }, 400);
-        }, 150);
+            }, 300);
+        }, 100);
     });
 };

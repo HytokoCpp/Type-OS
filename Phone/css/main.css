@@ -4,6 +4,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-drag: none;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 body {

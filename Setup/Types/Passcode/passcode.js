@@ -116,7 +116,9 @@ window.renderPasscodeScreen = function() {
                                 localStorage.setItem('hyos_passcode', currentPasscode);
                                 passPage.classList.remove('page-active');
                                 passPage.classList.add('page-exit-left');
-                                console.log("[Setup] Passcode saved. Proceed to next.");
+                                if (typeof window.renderAssistantIntroScreen === 'function') {
+                                    window.renderAssistantIntroScreen();
+                                }
                             } else {
                                 dotsContainer.classList.add('shake');
                                 setTimeout(() => {
@@ -166,60 +168,14 @@ window.renderPasscodeScreen = function() {
             key.appendChild(bg);
             key.appendChild(txt);
 
-            let isPointerDown = false;
-            let centerX = 0, centerY = 0;
-            let rafId = null;
-
-            key.addEventListener('pointerdown', (e) => {
-                isPointerDown = true;
-                const rect = key.getBoundingClientRect();
-                centerX = rect.left + rect.width / 2;
-                centerY = rect.top + rect.height / 2;
-                
-                bg.classList.add('dragging');
-                bg.style.transform = 'translate(0px, 0px) scale(1.35)';
-                
-                if (e.target.setPointerCapture) {
-                    e.target.setPointerCapture(e.pointerId);
-                }
-            });
-
-            key.addEventListener('pointermove', (e) => {
-                if (!isPointerDown) return;
-                
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                const dx = clientX - centerX;
-                const dy = clientY - centerY;
-                
-                const maxStretch = 30;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                let boundedDx = dx;
-                let boundedDy = dy;
-                
-                if (dist > maxStretch) {
-                    boundedDx = (dx / dist) * maxStretch;
-                    boundedDy = (dy / dist) * maxStretch;
-                }
-
-                if (rafId) cancelAnimationFrame(rafId);
-                rafId = requestAnimationFrame(() => {
-                    const angle = Math.atan2(boundedDy, boundedDx);
-                    const stretchX = 1.35 + (dist / maxStretch) * 0.15;
-                    const stretchY = 1.35 - (dist / maxStretch) * 0.1;
-                    
-                    bg.style.transform = `translate(${boundedDx}px, ${boundedDy}px) rotate(${angle}rad) scaleX(${stretchX}) scaleY(${stretchY})`;
-                });
+            key.addEventListener('pointerdown', () => {
+                bg.style.transform = 'scale(1.15)';
+                bg.style.background = 'rgba(0, 0, 0, 0.15)';
             });
 
             const endPress = () => {
-                if (!isPointerDown) return;
-                isPointerDown = false;
-                if (rafId) cancelAnimationFrame(rafId);
-                
-                bg.classList.remove('dragging');
-                bg.style.transform = 'translate(0px, 0px) scale(1)';
+                bg.style.transform = 'scale(1)';
+                bg.style.background = 'rgba(0, 0, 0, 0.08)';
             };
 
             key.addEventListener('pointerup', () => {

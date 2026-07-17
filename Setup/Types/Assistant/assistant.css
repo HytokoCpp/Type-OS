@@ -1,0 +1,294 @@
+.page-assistant, .page-assistant-voice, .page-assistant-settings, .page-assistant-dl {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    justify-content: flex-start;
+    padding-top: 0;
+}
+
+.assistant-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px 30px;
+}
+
+.voice-training-content, .dl-content {
+    justify-content: center;
+    padding-top: 0;
+}
+
+.kolyan-orb-wrapper {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.animate-content .kolyan-orb-wrapper {
+    animation: popIcon 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.kolyan-orb {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff2a5f, #00e5ff, #ff9500);
+    filter: blur(8px) contrast(1.5);
+    box-shadow: 0 10px 30px rgba(0, 229, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: orbBreathe 4s infinite alternate ease-in-out, orbSpin 10s linear infinite;
+    will-change: transform, filter;
+}
+
+.assistant-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 10px 0;
+    text-align: center;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease, color 0.4s ease;
+}
+
+.animate-content .assistant-title {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.1s forwards;
+}
+
+.assistant-title.success-text {
+    color: #34c759;
+}
+
+.assistant-desc {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    color: #3a3a3c;
+    line-height: 1.4;
+    margin: 0 0 25px 0;
+    text-align: center;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease, color 0.4s ease;
+}
+
+.animate-content .assistant-desc {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.2s forwards;
+}
+
+.assistant-features-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.assistant-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.feature-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.feature-text h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 4px 0;
+}
+
+.feature-text p {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    color: #6e6e73;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.kolyan-wave-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 80px;
+    margin-bottom: 40px;
+    opacity: 0;
+}
+
+.animate-content .kolyan-wave-container {
+    animation: popIcon 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.kolyan-wave {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #00e5ff;
+    transition: all 0.3s ease;
+}
+
+.kolyan-wave.w1 { background: #ff2a5f; }
+.kolyan-wave.w2 { background: #ff6a00; }
+.kolyan-wave.w3 { background: #ff00ff; }
+.kolyan-wave.w4 { background: #00e5ff; }
+.kolyan-wave.w5 { background: #34c759; }
+
+.kolyan-wave-container.listening .kolyan-wave {
+    animation: waveBounce 1s infinite ease-in-out alternate;
+}
+
+.kolyan-wave-container.listening .w1 { animation-delay: 0.0s; }
+.kolyan-wave-container.listening .w2 { animation-delay: 0.1s; }
+.kolyan-wave-container.listening .w3 { animation-delay: 0.2s; }
+.kolyan-wave-container.listening .w4 { animation-delay: 0.3s; }
+.kolyan-wave-container.listening .w5 { animation-delay: 0.4s; }
+
+@keyframes waveBounce {
+    0% { height: 8px; }
+    100% { height: 50px; }
+}
+
+.toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+}
+
+.ios-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+}
+
+.ios-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.ios-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e5e5ea;
+    transition: .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 30px;
+}
+
+.ios-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .ios-slider {
+    background-color: #34c759;
+}
+
+input:checked + .ios-slider:before {
+    transform: translateX(20px);
+}
+
+.kolyan-dl-orb-wrapper {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 50px;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.animate-content .kolyan-dl-orb-wrapper {
+    animation: popIcon 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.dl-orb {
+    animation: orbBreatheFast 2s infinite alternate ease-in-out, orbSpin 5s linear infinite;
+}
+
+.dl-title {
+    margin-bottom: 15px;
+}
+
+.dl-tooltip.success-text {
+    color: #34c759;
+    font-weight: 600;
+}
+
+.dl-time {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    color: #86868b;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.animate-content .dl-time {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.3s forwards;
+}
+
+.transcript-text {
+    margin-top: 10px;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.4s ease, color 0.4s ease;
+}
+
+.animate-content .transcript-text {
+    animation: fadeUpItem 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.3s forwards;
+}
+
+@keyframes orbBreatheFast {
+    0% { transform: scale(0.9); filter: blur(8px) contrast(1.5); }
+    100% { transform: scale(1.1); filter: blur(12px) contrast(1.2); }
+}
+
+@keyframes orbSpin {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes popIcon {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeUpItem {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
