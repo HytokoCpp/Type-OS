@@ -214,7 +214,7 @@ function renderAssistantVoiceScreen(prevPage) {
             setTimeout(() => {
                 voicePage.classList.remove('page-active');
                 voicePage.classList.add('page-exit-left');
-                renderAssistantVoiceSelectScreen(); // ИДЕМ НА ВЫБОР ГОЛОСА
+                renderAssistantVoiceSelectScreen();
                 setTimeout(() => voicePage.remove(), 600);
             }, 1500);
             
@@ -296,7 +296,7 @@ function renderAssistantVoiceScreen(prevPage) {
         setTimeout(() => {
             voicePage.classList.remove('page-active');
             voicePage.classList.add('page-exit-left');
-            renderAssistantVoiceSelectScreen(); // ИДЕМ НА ВЫБОР ГОЛОСА
+            renderAssistantVoiceSelectScreen();
             setTimeout(() => voicePage.remove(), 600);
         }, 300);
     });
@@ -354,7 +354,6 @@ function renderAssistantVoiceSelectScreen() {
 
     const populateVoices = () => {
         let voices = window.speechSynthesis.getVoices();
-        // Пытаемся найти русские голоса
         let ruVoices = voices.filter(v => v.lang.includes('ru') || v.lang.includes('RU'));
         
         groupWrapper.innerHTML = '';
@@ -369,7 +368,6 @@ function renderAssistantVoiceSelectScreen() {
                 const item = document.createElement('div');
                 item.className = 'locale-item voice-option';
                 
-                // Выделяем первый по умолчанию
                 const isChecked = index === 0;
                 item.innerHTML = `
                     <span>Голос ${index + 1} (${v.name.split(' ')[0]})</span>
@@ -391,7 +389,6 @@ function renderAssistantVoiceSelectScreen() {
         }
     };
 
-    // Загрузка голосов иногда требует времени
     if (window.speechSynthesis.getVoices().length > 0) {
         populateVoices();
     } else {
@@ -459,6 +456,18 @@ function renderAssistantSettingsScreen() {
                 </label>
             </div>
         </div>
+        <div class="locale-group">
+            <div class="locale-item toggle-item">
+                <div style="display:flex; flex-direction:column; align-items:flex-start; gap:4px;">
+                    <span>Отправка данных</span>
+                    <span style="font-size:12px; color:#86868b;">Помочь улучшить ИИ</span>
+                </div>
+                <label class="ios-switch">
+                    <input type="checkbox">
+                    <span class="ios-slider"></span>
+                </label>
+            </div>
+        </div>
     `;
     listWrapper.innerHTML = html;
 
@@ -490,6 +499,11 @@ function renderAssistantSettingsScreen() {
     backBtn.addEventListener('click', () => {
         setPage.classList.remove('page-active');
         setPage.classList.add('page-enter-right');
+        const introPage = document.querySelector('.page-assistant-voice-sel');
+        if (introPage) {
+            introPage.classList.remove('page-exit-left');
+            introPage.classList.add('page-active');
+        }
         setTimeout(() => setPage.remove(), 600);
     });
 
@@ -550,7 +564,6 @@ function renderAssistantDownloadScreen() {
     }, 500);
 }
 
-// РЕАЛЬНОЕ СКАЧИВАНИЕ WebLLM (Qwen2.5-1.5B-Instruct)
 async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
     try {
         tooltipElement.innerText = 'Загрузка движка WebLLM...';
@@ -562,7 +575,6 @@ async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
             console.log(report);
             tooltipElement.innerText = report.text.split(']')[1] || report.text;
             
-            // Если есть прогресс в процентах
             if (report.progress) {
                 const percent = Math.round(report.progress * 100);
                 timeElement.innerText = `Загружено: ${percent}% (около 1 ГБ)`;
@@ -571,7 +583,6 @@ async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
 
         tooltipElement.innerText = 'Проверка WebGPU...';
         
-        // Начинаем загрузку (кэшируется браузером автоматически)
         window.aiEngine = await webllm.CreateMLCEngine(
             selectedModel,
             { initProgressCallback: initProgressCallback }
@@ -579,4 +590,28 @@ async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
 
         tooltipElement.innerText = 'Нейросеть успешно загружена!';
         tooltipElement.classList.add('success-text');
-        timeElement.style.opaci
+        timeElement.style.opacity = '0';
+        
+        setTimeout(() => {
+            pageElement.classList.remove('page-active');
+            pageElement.classList.add('page-exit-left');
+            console.log("[Setup] Assistant Fully Downloaded and Active!");
+        }, 2000);
+
+    } catch (error) {
+        console.error("WebLLM Error:", error);
+        tooltipElement.innerText = 'Используется облачный режим (WebGPU не поддерживается)';
+        timeElement.innerText = 'Подключение к серверам...';
+        
+        setTimeout(() => {
+            tooltipElement.innerText = 'Готово!';
+            tooltipElement.classList.add('success-text');
+            timeElement.style.opacity = '0';
+            setTimeout(() => {
+                pageElement.classList.remove('page-active');
+                pageElement.classList.add('page-exit-left');
+                console.log("[Setup] Assistant in Cloud Mode.");
+            }, 1500);
+        }, 3000);
+    }
+}
