@@ -5,49 +5,30 @@
  transform: translateX(-50%) translateZ(0);
  width: 120px;
  height: 35px;
- background: #000000;
- border: 0.5px solid rgba(255, 255, 255, 0.15);
+ background-color: #000000;
  border-radius: 20px;
  z-index: 100;
- box-shadow: 
-  inset 0 1px 1.5px rgba(255, 255, 255, 0.22), 
-  inset 0 -1px 2px rgba(0, 0, 0, 0.85), 
-  0 8px 24px rgba(0, 0, 0, 0.35);
+ box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.05);
  cursor: pointer;
- will-change: width, height, top, border-radius, background;
+ will-change: width, height, top, border-radius, background-color;
  transition: 
   width 0.5s cubic-bezier(0.25, 1, 0.4, 1.08), 
   height 0.5s cubic-bezier(0.25, 1, 0.4, 1.08),
   border-radius 0.5s cubic-bezier(0.25, 1, 0.4, 1.08),
   top 0.5s cubic-bezier(0.25, 1, 0.4, 1.08),
-  background 0.4s ease;
+  background-color 0.4s ease;
 }
 
-.dynamic-island::before {
- content: "";
- position: absolute;
- top: 0.5px;
- left: 50%;
- transform: translateX(-50%);
- width: 94%;
- height: 45%;
- background: linear-gradient(to bottom, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0) 100%);
- border-radius: 20px 20px 80px 80px / 12px 12px 10px 10px;
- pointer-events: none;
- z-index: 12;
- transition: border-radius 0.5s cubic-bezier(0.25, 1, 0.4, 1.08);
+.dynamic-island.expanded-lock {
+ width: 160px;
+ height: 38px;
 }
 
-.dynamic-island.expanded-lock::before {
- border-radius: 20px 20px 100px 100px / 12px 12px 10px 10px;
-}
-
-.dynamic-island.faceid-scan-mode::before {
- border-radius: 40px 40px 140px 140px / 25px 25px 20px 20px;
-}
-
-.dynamic-island.ai-active::before {
- border-radius: 50px 50px 120px 120px / 30px 30px 20px 20px;
+.dynamic-island.faceid-scan-mode { 
+ width: 160px; 
+ height: 160px; 
+ border-radius: 40px; 
+ top: 25px; 
 }
 
 .island-faceid-lottie {
@@ -89,7 +70,7 @@
  transform: scale(0);
  opacity: 0;
  box-shadow: 0 0 8px #34c759, inset 0 0 2px #fff;
- transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, background-color 0.3s ease, left 0.5s cubic-bezier(0.25, 1, 0.4, 1.08);
+ transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, background-color 0.3s ease;
  z-index: 10;
 }
 
@@ -105,30 +86,6 @@
  box-shadow: 0 0 8px #ff9f0a, inset 0 0 2px #fff;
  transform: scale(1);
  opacity: 1;
-}
-
-.dynamic-island.ai-active .camera-indicator {
- left: calc(50% + 95px);
- top: 15px;
- width: 6px;
- height: 6px;
- background-color: #ff9f0a;
- box-shadow: 0 0 8px #ff9f0a, inset 0 0 2px #fff;
- transform: scale(1);
- opacity: 1;
- animation: metaballDetach 0.5s cubic-bezier(0.25, 1, 0.4, 1.2) forwards;
-}
-
-.dynamic-island.ai-active.camera-active .camera-indicator {
- background-color: #34c759;
- box-shadow: 0 0 8px #34c759, inset 0 0 2px #fff;
-}
-
-@keyframes metaballDetach {
- 0% { transform: scaleX(1) scaleY(1); }
- 30% { transform: scaleX(2.2) scaleY(0.7); }
- 65% { transform: scaleX(0.8) scaleY(1.1); }
- 100% { transform: scaleX(1) scaleY(1); }
 }
 
 img.island-lock-icon {
@@ -181,12 +138,9 @@ img.island-lock-icon.move-left {
 .dynamic-island.ai-active {
  width: 160px;
  height: 110px;
- border-radius: 40px 40px 35px 35px;
- background: #000000;
- box-shadow: 
-  inset 0 1px 1.5px rgba(255, 255, 255, 0.22), 
-  inset 0 -1px 2px rgba(0, 0, 0, 0.85), 
-  0 12px 30px rgba(0, 0, 0, 0.4);
+ border-radius: 50px 50px 35px 35px;
+ background-color: transparent;
+ box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
 .ai-container {
@@ -196,8 +150,11 @@ img.island-lock-icon.move-left {
  width: 100%;
  height: 100%;
  border-radius: inherit;
- background: #000000;
- border: 0.5px solid rgba(255, 255, 255, 0.15);
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(25px) saturate(180%);
+ -webkit-backdrop-filter: blur(25px) saturate(180%);
+ border: 1px solid rgba(255, 255, 255, 0.2);
+ box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
  opacity: 0;
  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
  overflow: hidden;
@@ -226,7 +183,7 @@ img.island-lock-icon.move-left {
  width: 100%;
  height: 100%;
  z-index: 1;
- filter: blur(15px);
+ filter: blur(10px);
 }
 
 .ai-ball {
@@ -237,28 +194,28 @@ img.island-lock-icon.move-left {
 }
 
 .ai-ball-1 {
- width: 75px;
- height: 75px;
+ width: 55px;
+ height: 55px;
  background-color: #ff2a5f;
- bottom: -15px;
- left: 10px;
+ bottom: -5px;
+ left: 15px;
  animation: float1 4s infinite alternate ease-in-out;
 }
 
 .ai-ball-2 {
- width: 85px;
- height: 85px;
+ width: 65px;
+ height: 65px;
  background-color: #00e5ff;
- bottom: -25px;
- right: 10px;
+ bottom: -15px;
+ right: 15px;
  animation: float2 5s infinite alternate ease-in-out;
 }
 
 .ai-ball-3 {
- width: 65px;
- height: 65px;
+ width: 45px;
+ height: 45px;
  background-color: #ff9500;
- bottom: 5px;
+ bottom: 15px;
  left: 50%;
  transform: translateX(-50%);
  animation: float3 4.5s infinite alternate ease-in-out;
