@@ -578,8 +578,24 @@ async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
   const webllm = await import("https://esm.run/@mlc-ai/web-llm");
   console.log("%c[Колян ИИ] Загрузчик нейросети успешно подключен к ядру.", "color: #34c759;");
   
-  const modelIdentifier = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
+  let modelIdentifier = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
   
+  try {
+   if (navigator.gpu) {
+    const adapter = await navigator.gpu.requestAdapter();
+    if (adapter) {
+     const info = await adapter.requestAdapterInfo();
+     const gpuName = (info.description || info.device || "").toLowerCase();
+     if (gpuName.includes("adreno") || gpuName.includes("qualcomm") || gpuName.includes("mali") || gpuName.includes("intel")) {
+      console.log("%c[Колян ИИ] Обнаружена мобильная графика Adreno/Mali/Intel. В целях совместимости переключаемся на безопасную 32-битную модель...", "color: #ff9500; font-weight: bold;");
+      modelIdentifier = "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+     }
+    }
+   }
+  } catch (gpuError) {
+   console.warn("[Колян ИИ] Ошибка опроса GPU-адаптера:", gpuError);
+  }
+
   const initProgressCallback = (report) => {
    console.log("%c[Колян ИИ] Отчёт загрузки весов:%c " + report.text, "color: #ff9500; font-weight: bold;", "color: default;");
    
@@ -611,10 +627,23 @@ async function startRealAIDownload(tooltipElement, timeElement, pageElement) {
   }
   console.log("%c[Колян ИИ] Графическое ядро для ИИ обнаружено успешно:", "color: #34c759;", adapter);
   
-  window.aiEngine = await webllm.CreateMLCEngine(
-   modelIdentifier,
-   { initProgressCallback: initProgressCallback }
-  );
+  try {
+   window.aiEngine = await webllm.CreateMLCEngine(
+    modelIdentifier,
+    { initProgressCallback: initProgressCallback }
+   );
+  } catch (engineError) {
+   if (modelIdentifier.includes("f16")) {
+    console.warn("%c[Колян ИИ] Ошибка загрузки модели f16. Активируем аварийный запуск совместимой 32-битной модели...", "color: #ff9500; font-weight: bold;");
+    modelIdentifier = "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+    window.aiEngine = await webllm.CreateMLCEngine(
+     modelIdentifier,
+     { initProgressCallback: initProgressCallback }
+    );
+   } else {
+    throw engineError;
+   }
+  }
   
   console.log("%c[Колян ИИ] Нейросеть Колян успешно загружена в ОЗУ устройства и готова к вычислениям!", "color: #34c759; font-weight: bold;");
   
