@@ -19,17 +19,17 @@ window.renderFaceIDScreen = function() {
     const iconWrapper = document.createElement('div');
     iconWrapper.className = 'faceid-icon-wrapper';
     iconWrapper.innerHTML = `
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path class="faceid-bracket" d="M30 20 H20 V30" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path class="faceid-bracket" d="M70 20 H80 V30" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path class="faceid-bracket" d="M30 80 H20 V70" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path class="faceid-bracket" d="M70 80 H80 V70" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path class="faceid-face" d="M40 45 V50" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
-            <path class="faceid-face" d="M60 45 V50" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
-            <path class="faceid-face" d="M50 48 V60" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
-            <path class="faceid-smile" d="M40 68 C45 73, 55 73, 60 68" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-    `;
+ <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <path class="faceid-bracket" d="M30 20 H20 V30" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path class="faceid-bracket" d="M70 20 H80 V30" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path class="faceid-bracket" d="M30 80 H20 V70" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path class="faceid-bracket" d="M70 80 H80 V70" stroke="#82b1ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path class="faceid-face" d="M40 45 V50" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
+ <path class="faceid-face" d="M60 45 V50" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
+ <path class="faceid-face" d="M50 48 V60" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
+ <path class="faceid-smile" d="M40 68 C45 73, 55 73, 60 68" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
+ </svg>
+ `;
     
     const title = document.createElement('h2');
     title.className = 'faceid-title';
@@ -84,9 +84,10 @@ window.renderFaceIDScreen = function() {
     const stopScanning = () => {
         if (island) {
             island.classList.remove('camera-active');
+            island.classList.remove('faceid-scan-mode');
+            const islandLottieWrapper = island.querySelector('.island-faceid-lottie');
+            if (islandLottieWrapper) islandLottieWrapper.remove();
         }
-        const lottieWrapper = document.querySelector('.faceid-scanning-lottie');
-        if (lottieWrapper) lottieWrapper.remove();
     };
     
     backBtn.addEventListener('click', () => {
@@ -134,25 +135,26 @@ window.renderFaceIDScreen = function() {
             setTimeout(() => {
                 if (island) {
                     island.classList.add('camera-active');
+                    island.classList.add('faceid-scan-mode');
+                    
+                    const islandLottieWrapper = document.createElement('div');
+                    islandLottieWrapper.className = 'island-faceid-lottie';
+                    island.appendChild(islandLottieWrapper);
+                    
+                    lottie.loadAnimation({
+                        container: islandLottieWrapper,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        path: '../Setup/assets/animations/faceid.json'
+                    });
+                    
+                    setTimeout(() => {
+                        islandLottieWrapper.classList.add('visible');
+                    }, 50);
                 }
                 
                 iconWrapper.style.display = 'none';
-                
-                const lottieWrapper = document.createElement('div');
-                lottieWrapper.className = 'faceid-scanning-lottie';
-                faceIdPage.appendChild(lottieWrapper);
-                
-                const anim = lottie.loadAnimation({
-                    container: lottieWrapper,
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: true,
-                    path: '../Setup/assets/animations/faceid.json'
-                });
-                
-                setTimeout(() => {
-                    lottieWrapper.classList.add('visible');
-                }, 50);
                 
                 title.innerText = '';
                 desc.innerText = '';
@@ -189,11 +191,11 @@ window.renderFaceIDScreen = function() {
                         const successIcon = document.createElement('div');
                         successIcon.className = 'faceid-success-icon';
                         successIcon.innerHTML = `
-                            <svg viewBox="0 0 52 52">
-                                <circle class="success-circle" cx="26" cy="26" r="24" fill="none"/>
-                                <path class="success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                            </svg>
-                        `;
+ <svg viewBox="0 0 52 52">
+ <circle class="success-circle" cx="26" cy="26" r="24" fill="none"/>
+ <path class="success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+ </svg>
+ `;
                         contentArea.insertBefore(successIcon, title);
                         
                         setTimeout(() => {
@@ -232,3 +234,4 @@ window.renderFaceIDScreen = function() {
             }, 400);
         }, 150);
     });
+};
