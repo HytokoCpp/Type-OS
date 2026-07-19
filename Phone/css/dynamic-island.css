@@ -5,9 +5,7 @@
  transform: translateX(-50%) translateZ(0);
  width: 120px;
  height: 35px;
- background: rgba(10, 10, 10, 0.88);
- backdrop-filter: blur(20px) saturate(160%);
- -webkit-backdrop-filter: blur(20px) saturate(160%);
+ background: #000000;
  border: 0.5px solid rgba(255, 255, 255, 0.15);
  border-radius: 20px;
  z-index: 100;
@@ -70,7 +68,7 @@
 
 .camera {
  position: absolute;
- left: calc(50% + 23px);
+ left: calc(50% + 36px);
  top: 10.5px;
  width: 14px;
  height: 14px;
@@ -82,7 +80,7 @@
 
 .camera-indicator {
  position: absolute;
- left: calc(50% + 3px);
+ left: calc(50% + 23px);
  top: 15px;
  width: 5px;
  height: 5px;
@@ -183,9 +181,12 @@ img.island-lock-icon.move-left {
 .dynamic-island.ai-active {
  width: 160px;
  height: 110px;
- border-radius: 50px 50px 35px 35px;
- background-color: transparent;
- box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+ border-radius: 40px 40px 35px 35px;
+ background: #000000;
+ box-shadow: 
+  inset 0 1px 1.5px rgba(255, 255, 255, 0.22), 
+  inset 0 -1px 2px rgba(0, 0, 0, 0.85), 
+  0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .ai-container {
@@ -195,11 +196,8 @@ img.island-lock-icon.move-left {
  width: 100%;
  height: 100%;
  border-radius: inherit;
- background: rgba(255, 255, 255, 0.15);
- backdrop-filter: blur(25px) saturate(180%);
- -webkit-backdrop-filter: blur(25px) saturate(180%);
- border: 1px solid rgba(255, 255, 255, 0.2);
- box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
+ background: #000000;
+ border: 0.5px solid rgba(255, 255, 255, 0.15);
  opacity: 0;
  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
  overflow: hidden;
@@ -228,7 +226,7 @@ img.island-lock-icon.move-left {
  width: 100%;
  height: 100%;
  z-index: 1;
- filter: blur(10px);
+ filter: blur(15px);
 }
 
 .ai-ball {
@@ -239,28 +237,28 @@ img.island-lock-icon.move-left {
 }
 
 .ai-ball-1 {
- width: 55px;
- height: 55px;
+ width: 75px;
+ height: 75px;
  background-color: #ff2a5f;
- bottom: -5px;
- left: 15px;
+ bottom: -15px;
+ left: 10px;
  animation: float1 4s infinite alternate ease-in-out;
 }
 
 .ai-ball-2 {
- width: 65px;
- height: 65px;
+ width: 85px;
+ height: 85px;
  background-color: #00e5ff;
- bottom: -15px;
- right: 15px;
+ bottom: -25px;
+ right: 10px;
  animation: float2 5s infinite alternate ease-in-out;
 }
 
 .ai-ball-3 {
- width: 45px;
- height: 45px;
+ width: 65px;
+ height: 65px;
  background-color: #ff9500;
- bottom: 15px;
+ bottom: 5px;
  left: 50%;
  transform: translateX(-50%);
  animation: float3 4.5s infinite alternate ease-in-out;
