@@ -1,5 +1,3 @@
-window.faceIdStream = null;
-
 window.renderFaceIDScreen = function() {
     const navController = document.querySelector('.setup-nav-controller');
     
@@ -12,12 +10,12 @@ window.renderFaceIDScreen = function() {
     const backBtn = document.createElement('div');
     backBtn.className = 'nav-icon-btn';
     backBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`;
-
+    
     topBar.appendChild(backBtn);
-
+    
     const contentArea = document.createElement('div');
     contentArea.className = 'faceid-content';
-
+    
     const iconWrapper = document.createElement('div');
     iconWrapper.className = 'faceid-icon-wrapper';
     iconWrapper.innerHTML = `
@@ -32,73 +30,67 @@ window.renderFaceIDScreen = function() {
             <path class="faceid-smile" d="M40 68 C45 73, 55 73, 60 68" stroke="#007aff" stroke-width="6" stroke-linecap="round"/>
         </svg>
     `;
-
+    
     const title = document.createElement('h2');
     title.className = 'faceid-title';
     title.innerText = 'Настройка Face ID';
-
+    
     const desc = document.createElement('p');
     desc.className = 'faceid-desc';
-    desc.innerText = 'Сначала расположите лицо в рамке камеры. Затем плавно двигайте головой по кругу, чтобы показать все ракурсы Вашего лица.';
-
+    desc.innerText = 'Телефон может распознавать уникальные трехмерные особенности Вашего лица для автоматической разблокировки и подтверждения личности.';
+    
     contentArea.appendChild(iconWrapper);
     contentArea.appendChild(title);
     contentArea.appendChild(desc);
-
+    
     const scanTextWrapper = document.createElement('div');
     scanTextWrapper.className = 'faceid-scan-text-wrapper';
     const scanDesc = document.createElement('p');
     scanDesc.className = 'faceid-scan-desc';
-    scanDesc.innerText = 'Расположите лицо в рамке.';
+    scanDesc.innerText = 'Плавно двигайте головой по кругу.';
     scanTextWrapper.appendChild(scanDesc);
-
+    
     const bottomSheet = document.createElement('div');
     bottomSheet.className = 'privacy-bottom-sheet faceid-bottom';
-
+    
     const continueBtn = document.createElement('button');
     continueBtn.className = 'btn-privacy-primary';
     continueBtn.innerText = 'Начать';
-
+    
     const setupLaterBtn = document.createElement('button');
     setupLaterBtn.className = 'btn-privacy-secondary';
     setupLaterBtn.innerText = 'Настроить позже в Настройках';
-
+    
     bottomSheet.appendChild(continueBtn);
     bottomSheet.appendChild(setupLaterBtn);
-
+    
     faceIdPage.appendChild(topBar);
     faceIdPage.appendChild(contentArea);
     faceIdPage.appendChild(scanTextWrapper);
     faceIdPage.appendChild(bottomSheet);
     
     navController.appendChild(faceIdPage);
-
+    
     void faceIdPage.offsetWidth;
     faceIdPage.classList.remove('page-enter-right');
     faceIdPage.classList.add('page-active');
-
+    
     const island = document.querySelector('.dynamic-island');
-
+    
     setTimeout(() => {
         faceIdPage.classList.add('animate-content');
     }, 50);
-
-    const stopCamera = () => {
-        if (window.faceIdStream) {
-            window.faceIdStream.getTracks().forEach(track => track.stop());
-            window.faceIdStream = null;
-        }
-        const viewfinder = document.querySelector('.island-camera-viewfinder');
-        if (viewfinder) viewfinder.remove();
+    
+    const stopScanning = () => {
         if (island) {
-            island.classList.remove('faceid-scan-mode');
             island.classList.remove('camera-active');
-            island.classList.remove('scanning');
         }
+        const lottieWrapper = document.querySelector('.faceid-scanning-lottie');
+        if (lottieWrapper) lottieWrapper.remove();
     };
-
+    
     backBtn.addEventListener('click', () => {
-        stopCamera();
+        stopScanning();
         faceIdPage.classList.remove('page-active');
         faceIdPage.classList.add('page-enter-right');
         const privPage = document.querySelector('.page-privacy');
@@ -106,75 +98,65 @@ window.renderFaceIDScreen = function() {
             privPage.classList.remove('page-exit-left');
             privPage.classList.add('page-active');
         }
-        setTimeout(() => faceIdPage.remove(), 500);
+        setTimeout(() => faceIdPage.remove(), 600);
     });
-
+    
     const proceedNext = () => {
-        stopCamera();
+        stopScanning();
         faceIdPage.classList.remove('page-active');
         faceIdPage.classList.add('page-exit-left');
         if (typeof window.renderPasscodeScreen === 'function') {
             window.renderPasscodeScreen();
         }
     };
-
+    
     setupLaterBtn.addEventListener('click', () => {
         setupLaterBtn.style.transform = 'scale(0.96)';
         setTimeout(() => setupLaterBtn.style.transform = 'scale(1)', 150);
         setTimeout(proceedNext, 200);
     });
-
+    
     continueBtn.addEventListener('click', () => {
         continueBtn.style.transform = 'scale(0.96)';
         setTimeout(() => continueBtn.style.transform = 'scale(1)', 150);
         
         setTimeout(() => {
-            contentArea.classList.add('fade-out-down');
-            bottomSheet.classList.add('fade-out-down');
-
+            iconWrapper.style.transition = 'opacity 0.3s ease';
+            title.style.transition = 'opacity 0.3s ease';
+            desc.style.transition = 'opacity 0.3s ease';
+            bottomSheet.style.transition = 'opacity 0.3s ease';
+            
+            iconWrapper.style.opacity = '0';
+            title.style.opacity = '0';
+            desc.style.opacity = '0';
+            bottomSheet.style.opacity = '0';
+            
             setTimeout(() => {
-                island.classList.add('faceid-scan-mode');
-                island.classList.add('camera-active');
-                island.classList.add('scanning');
-
-                const viewfinder = document.createElement('div');
-                viewfinder.className = 'island-camera-viewfinder';
+                if (island) {
+                    island.classList.add('camera-active');
+                }
                 
-                const tl = document.createElement('div'); tl.className = 'scan-corner tl';
-                const tr = document.createElement('div'); tr.className = 'scan-corner tr';
-                const bl = document.createElement('div'); bl.className = 'scan-corner bl';
-                const br = document.createElement('div'); br.className = 'scan-corner br';
+                iconWrapper.style.display = 'none';
                 
-                const video = document.createElement('video');
-                video.autoplay = true;
-                video.playsInline = true;
-                video.muted = true;
-
-                viewfinder.appendChild(tl);
-                viewfinder.appendChild(tr);
-                viewfinder.appendChild(bl);
-                viewfinder.appendChild(br);
-                viewfinder.appendChild(video);
-                island.appendChild(viewfinder);
-
+                const lottieWrapper = document.createElement('div');
+                lottieWrapper.className = 'faceid-scanning-lottie';
+                faceIdPage.appendChild(lottieWrapper);
+                
+                const anim = lottie.loadAnimation({
+                    container: lottieWrapper,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '../Setup/assets/animations/faceid.json'
+                });
+                
                 setTimeout(() => {
-                    viewfinder.classList.add('visible');
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then(stream => {
-                            window.faceIdStream = stream;
-                            video.srcObject = stream;
-                        })
-                        .catch(err => {
-                            video.style.display = 'none';
-                            viewfinder.style.backgroundImage = "url('assets/wallpapers/classic1.png')";
-                            viewfinder.style.backgroundSize = "cover";
-                            viewfinder.style.backgroundPosition = "center";
-                        });
-                }, 500);
-
+                    lottieWrapper.classList.add('visible');
+                }, 50);
+                
                 title.innerText = '';
                 desc.innerText = '';
-
+                
                 bottomSheet.innerHTML = '';
                 
                 const laterBtn = document.createElement('button');
@@ -186,31 +168,24 @@ window.renderFaceIDScreen = function() {
                 restartBtn.className = 'btn-privacy-secondary';
                 restartBtn.style.background = 'transparent';
                 restartBtn.innerText = 'Начать заново';
-
+                
                 laterBtn.addEventListener('click', proceedNext);
                 restartBtn.addEventListener('click', proceedNext);
-
+                
                 bottomSheet.appendChild(laterBtn);
                 bottomSheet.appendChild(restartBtn);
-
+                
                 setTimeout(() => {
                     scanTextWrapper.classList.add('visible');
-                    bottomSheet.classList.remove('fade-out-down');
-                    bottomSheet.classList.add('fade-in-up');
-                }, 400);
-
+                    bottomSheet.style.opacity = '1';
+                }, 300);
+                
                 setTimeout(() => {
+                    stopScanning();
                     scanTextWrapper.classList.remove('visible');
-                    bottomSheet.classList.remove('fade-in-up');
-                    bottomSheet.classList.add('fade-out-down');
-
+                    bottomSheet.style.opacity = '0';
+                    
                     setTimeout(() => {
-                        stopCamera();
-                        
-                        iconWrapper.style.display = 'none';
-                        contentArea.classList.remove('fade-out-down');
-                        contentArea.classList.add('fade-in-up');
-
                         const successIcon = document.createElement('div');
                         successIcon.className = 'faceid-success-icon';
                         successIcon.innerHTML = `
@@ -220,21 +195,21 @@ window.renderFaceIDScreen = function() {
                             </svg>
                         `;
                         contentArea.insertBefore(successIcon, title);
-
+                        
                         setTimeout(() => {
                             successIcon.classList.add('visible');
                         }, 50);
-
+                        
                         setTimeout(() => {
                             title.innerText = 'Face ID настроен';
                             title.style.textAlign = 'center';
                             title.style.marginTop = '20px';
                             desc.innerText = 'Теперь Вы можете использовать Face ID для разблокировки телефона.';
                             desc.style.textAlign = 'center';
-
+                            
                             title.style.opacity = '1';
                             desc.style.opacity = '1';
-
+                            
                             bottomSheet.innerHTML = '';
                             
                             const finalBtn = document.createElement('button');
@@ -243,19 +218,17 @@ window.renderFaceIDScreen = function() {
                             finalBtn.addEventListener('click', () => {
                                 finalBtn.style.transform = 'scale(0.96)';
                                 setTimeout(() => finalBtn.style.transform = 'scale(1)', 150);
-                                setTimeout(proceedNext, 200);
+                                setTimeout(proceedNext, 300);
                             });
-
+                            
                             bottomSheet.appendChild(finalBtn);
-                            bottomSheet.classList.remove('fade-out-down');
-                            bottomSheet.classList.add('fade-in-up');
+                            bottomSheet.style.opacity = '1';
                         }, 600);
-
-                    }, 600);
-
+                        
+                    }, 400);
+                    
                 }, 4000);
-
-            }, 300);
-        }, 100);
+                
+            }, 400);
+        }, 150);
     });
-};

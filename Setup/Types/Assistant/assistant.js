@@ -129,6 +129,7 @@ window.renderAssistantIntroScreen = function() {
 
 function renderAssistantVoiceScreen(prevPage) {
     const navController = document.querySelector('.setup-nav-controller');
+    const island = document.querySelector('.dynamic-island');
     
     const voicePage = document.createElement('div');
     voicePage.className = 'setup-page page-enter-right page-assistant-voice';
@@ -194,6 +195,7 @@ function renderAssistantVoiceScreen(prevPage) {
     setTimeout(() => {
         voicePage.classList.add('animate-content');
         siriWave.classList.add('listening');
+        if (island) island.classList.add('mic-active');
     }, 500);
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -201,6 +203,7 @@ function renderAssistantVoiceScreen(prevPage) {
 
     const completeSetup = () => {
         isListeningActive = false;
+        if (island) island.classList.remove('mic-active');
         if (recognition) recognition.stop();
         siriWave.classList.remove('listening');
         instructions.style.opacity = '0';
@@ -256,7 +259,9 @@ function renderAssistantVoiceScreen(prevPage) {
                             instructions.style.opacity = '1';
                             transcriptText.style.opacity = '1';
                             
-                            if (isListeningActive) recognition.start();
+                            if (isListeningActive) {
+                                try { recognition.start(); } catch(e) {}
+                            }
                         }, 400);
                     } else {
                         completeSetup();
@@ -292,6 +297,7 @@ function renderAssistantVoiceScreen(prevPage) {
         skipBtn.style.transform = 'scale(0.96)';
         setTimeout(() => skipBtn.style.transform = 'scale(1)', 150);
         isListeningActive = false;
+        if (island) island.classList.remove('mic-active');
         if (recognition) recognition.stop();
         setTimeout(() => {
             voicePage.classList.remove('page-active');
@@ -491,6 +497,72 @@ function renderAssistantSettingsScreen() {
     void setPage.offsetWidth;
     setPage.classList.remove('page-enter-right');
     setPage.classList.add('page-active');
+
+    setTimeout(() => {
+        setPage.classList.add('animate-content');
+    }, 100);
+
+    backBtn.addEventListener('click', () => {
+        setPage.classList.remove('page-active');
+        setPage.classList.add('page-enter-right');
+        const introPage = document.querySelector('.page-assistant-voice-sel');
+        if (introPage) {
+            introPage.classList.remove('page-exit-left');
+            introPage.classList.add('page-active');
+        }
+        setTimeout(() => setPage.remove(), 600);
+    });
+
+    finishBtn.addEventListener('click', () => {
+        finishBtn.style.transform = 'scale(0.96)';
+        setTimeout(() => finishBtn.style.transform = 'scale(1)', 150);
+        setTimeout(() => {
+            setPage.classList.remove('page-active');
+            setPage.classList.add('page-exit-left');
+            renderAssistantDownloadScreen();
+        }, 300);
+    });
+}
+
+function renderAssistantDownloadScreen() {
+    const navController = document.querySelector('.setup-nav-controller');
+    
+    const dlPage = document.createElement('div');
+    dlPage.className = 'setup-page page-enter-right page-assistant-dl';
+
+    const contentArea = document.createElement('div');
+    contentArea.className = 'assistant-content dl-content';
+
+    const orbWrapper = document.createElement('div');
+    orbWrapper.className = 'kolyan-dl-orb-wrapper';
+    
+    const orb = document.createElement('div');
+    orb.className = 'kolyan-orb dl-orb';
+    orbWrapper.appendChild(orb);
+
+    const title = document.createElement('h2');
+    title.className = 'assistant-title dl-title';
+    title.innerText = 'Загрузка ИИ-модели';
+
+    const tooltipText = document.createElement('p');
+    tooltipText.className = 'assistant-desc dl-tooltip';
+    tooltipText.innerText = 'Инициализация WebGPU...';
+
+    const timeRemaining = document.createElement('p');
+    timeRemaining.className = 'dl-time';
+    timeRemaining.innerText = 'Подготовка среды';
+
+    contentArea.appendChild(orbWrapper);
+    contentArea.appendChild(title);
+    contentArea.appendChild(tooltipText);
+    contentArea.appendChild(timeRemaining);
+
+    dlPage.appendChild(contentArea);
+    navController.appendChild(dlPage);
+
+    void dlPage.offsetWidth;
+    dlPage.classList.remove('page-enter-right');
+    dlPage.classList.add('page-active');
 
     setTimeout(() => {
         dlPage.classList.add('animate-content');
